@@ -1,0 +1,11 @@
+[package]
+name = "slip10"
+version = "0.0.1"
+authors = ["Ngo Iok Ui <wusyong9104@gmail.com>"]
+edition = "2018"
+description = "SLIP-0010 : Universal private key derivation from master private key"
+license = "Apache-2.0/MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
