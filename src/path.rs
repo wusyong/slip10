@@ -1,6 +1,7 @@
 use crate::{Error, HARDEND};
 
-pub struct BIP32Path(pub(crate) Vec<u32>);
+#[derive(Debug, Eq, PartialEq)]
+pub struct BIP32Path(pub Vec<u32>);
 
 impl BIP32Path {
     pub fn from(path: &str) -> Result<BIP32Path, Error> {
@@ -9,12 +10,22 @@ impl BIP32Path {
         let mut lines = path.lines();
 
         while let Some(p) = lines.next() {
-            if p.ends_with("H") {
-                let index: u32 = p[..p.len()-1].parse().map_err(|_| Error::InvalidIndex)?;
-                paths.push(index + HARDEND);
-            } else {
-                let index: u32 = p.parse().map_err(|_| Error::InvalidIndex)?;
-                paths.push(index);
+            if p != "m" {
+                if p.ends_with("H") || p.ends_with("'") {
+                    let index: u32 = p[..p.len() - 1].parse().map_err(|_| Error::InvalidIndex)?;
+                    if index < HARDEND {
+                        paths.push(index + HARDEND);
+                    } else {
+                        return Err(Error::InvalidIndex);
+                    }    
+                } else {
+                    let index: u32 = p.parse().map_err(|_| Error::InvalidIndex)?;
+                    if index < HARDEND {
+                        paths.push(index);
+                    } else {
+                        return Err(Error::InvalidIndex);
+                    } 
+                }
             }
         }
 

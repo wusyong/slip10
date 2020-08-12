@@ -1,4 +1,2 @@
 #[test]
-fn test_ed25519() {
-
-}
+fn test_ed25519() {}

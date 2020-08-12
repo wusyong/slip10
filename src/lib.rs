@@ -5,9 +5,9 @@ pub use crate::path::BIP32Path;
 use std::convert::TryInto;
 use std::fmt;
 
-use sha2::Sha256;
-use hmac::{Hmac, Mac, NewMac, crypto_mac::Output};
 use ed25519_dalek::{PublicKey, SecretKey};
+use hmac::{crypto_mac::Output, Hmac, Mac, NewMac};
+use sha2::Sha256;
 
 pub(crate) const HARDEND: u32 = 1 << 31;
 
@@ -26,7 +26,6 @@ impl fmt::Display for Error {
 
 impl std::error::Error for Error {}
 
-
 // Create alias for HMAC-SHA256
 type HmacSha256 = Hmac<Sha256>;
 
@@ -35,11 +34,9 @@ pub fn derive_key_from_path(seed: &[u8; 32], curve: Curve, path: &str) -> Result
     let master: Result<Key, Error> = Ok(Key::new(seed, curve));
     let path = BIP32Path::from(path)?;
 
-    path.0.into_iter().fold(master, |key, index| {
-        match key {
-            Ok(k) => Ok(k.generate_child_key(index)?),
-            Err(e) => Err(e),
-        }
+    path.0.into_iter().fold(master, |key, index| match key {
+        Ok(k) => Ok(k.generate_child_key(index)?),
+        Err(e) => Err(e),
     })
 }
 
@@ -51,13 +48,13 @@ pub enum Curve {
 impl Curve {
     fn seedkey(&self) -> &[u8] {
         match self {
-            Curve::Ed25519 => b"ed25519 seed"
+            Curve::Ed25519 => b"ed25519 seed",
         }
     }
 
     fn validate_child_index(&self, index: u32) -> bool {
         match self {
-            Curve::Ed25519 => index < HARDEND
+            Curve::Ed25519 => index < HARDEND,
         }
     }
 
@@ -134,8 +131,7 @@ impl Key {
 
 fn hmac_sha256(key: &[u8], data: &[u8]) -> Output<HmacSha256> {
     // Create HMAC-SHA256 instance which implements `Mac` trait
-    let mut mac = HmacSha256::new_varkey(key)
-        .expect("HMAC can take key of any size");
+    let mut mac = HmacSha256::new_varkey(key).expect("HMAC can take key of any size");
     mac.update(data);
 
     // `result` has type `Output` which is a thin wrapper around array of
