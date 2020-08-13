@@ -95,7 +95,14 @@ impl Key {
         }
     }
 
-    pub fn generate_child_key(&self, index: u32) -> Result<Key, Error> {
+    /// Compute corresponding public key. 
+    pub fn public_key(&self) -> [u8; 33] {
+        let mut key = [0u8; 33];
+        key.copy_from_slice(&self.curve.public_key(&self.key));
+        key
+    }
+
+    fn generate_child_key(&self, index: u32) -> Result<Key, Error> {
         if self.curve.validate_child_index(index) {
             return Err(Error::InvalidIndex);
         }
@@ -113,12 +120,6 @@ impl Key {
             chain_code,
             curve: self.curve,
         })
-    }
-
-    pub fn public_key(&self) -> [u8; 33] {
-        let mut key = [0u8; 33];
-        key.copy_from_slice(&self.curve.public_key(&self.key));
-        key
     }
 
     fn get_intermediary(&self, index: u32) -> Output<HmacSha256> {
