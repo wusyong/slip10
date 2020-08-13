@@ -7,7 +7,7 @@ use std::fmt;
 
 use ed25519_dalek::{PublicKey, SecretKey};
 use hmac::{crypto_mac::Output, Hmac, Mac, NewMac};
-use sha2::Sha256;
+use sha2::Sha512;
 
 pub(crate) const HARDEND: u32 = 1 << 31;
 
@@ -27,10 +27,10 @@ impl fmt::Display for Error {
 impl std::error::Error for Error {}
 
 // Create alias for HMAC-SHA256
-type HmacSha256 = Hmac<Sha256>;
+type HmacSha256 = Hmac<Sha512>;
 
 /// Derives an extended private key for the curve from seed and path as outlined by SLIP-10.
-pub fn derive_key_from_path(seed: &[u8; 32], curve: Curve, path: &str) -> Result<Key, Error> {
+pub fn derive_key_from_path(seed: &[u8], curve: Curve, path: &str) -> Result<Key, Error> {
     let master: Result<Key, Error> = Ok(Key::new(seed, curve));
     let path = BIP32Path::from(path)?;
 
@@ -79,7 +79,7 @@ pub struct Key {
 
 impl Key {
     /// Creates a new master private extended key for the curve from a seed.
-    pub fn new(seed: &[u8; 32], curve: Curve) -> Self {
+    pub fn new(seed: &[u8], curve: Curve) -> Self {
         // Calculate I = HMAC-SHA512(Key = Curve, Data = seed)
         let inter = hmac_sha256(curve.seedkey(), seed).into_bytes();
 
@@ -113,6 +113,12 @@ impl Key {
             chain_code,
             curve: self.curve,
         })
+    }
+
+    pub fn public_key(&self) -> [u8; 33] {
+        let mut key = [0u8; 33];
+        key.copy_from_slice(&self.curve.public_key(&self.key));
+        key
     }
 
     fn get_intermediary(&self, index: u32) -> Output<HmacSha256> {

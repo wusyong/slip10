@@ -12,3 +12,6 @@ license = "Apache-2.0/MIT"
 ed25519-dalek = "1.0.0-pre.4"
 hmac = "0.9"
 sha2 = "0.9"
+
+[dev-dependencies]
+hex = "0.4"
