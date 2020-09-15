@@ -3,7 +3,7 @@ use crate::{Error, HARDEND};
 use std::convert::From;
 
 /// A path structure defined by BIP 32.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BIP32Path(pub(crate) Vec<u32>);
 
 impl BIP32Path {
@@ -44,6 +44,16 @@ impl BIP32Path {
     /// Return the index value of corresponding depth in the BIP32Path.
     pub fn index(&self, depth: u8) -> Option<&u32> {
         self.0.get(depth as usize)
+    }
+
+    /// Push one index to the BIP32Path.
+    pub fn push(&mut self, index: u32) {
+        self.0.push(index);
+    }
+
+    /// Pop last index of the BIP32Path.
+    pub fn pop(&mut self) -> Option<u32> {
+        self.0.pop()
     }
 }
 
