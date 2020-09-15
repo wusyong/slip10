@@ -94,7 +94,7 @@ impl Key {
         }
     }
 
-    /// Compute corresponding public key. 
+    /// Compute corresponding public key.
     pub fn public_key(&self) -> [u8; 33] {
         let mut key = [0u8; 33];
         key.copy_from_slice(&self.curve.public_key(&self.key));
