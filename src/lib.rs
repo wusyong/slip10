@@ -30,11 +30,11 @@ impl std::error::Error for Error {}
 type HmacSha256 = Hmac<Sha512>;
 
 /// Derives an extended private key for the curve from seed and path as outlined by SLIP-10.
-pub fn derive_key_from_path(seed: &[u8], curve: Curve, path: BIP32Path) -> Result<Key, Error> {
+pub fn derive_key_from_path(seed: &[u8], curve: Curve, path: &BIP32Path) -> Result<Key, Error> {
     let master: Result<Key, Error> = Ok(Key::new(seed, curve));
 
-    path.0.into_iter().fold(master, |key, index| match key {
-        Ok(k) => Ok(k.generate_child_key(index)?),
+    path.0.iter().fold(master, |key, index| match key {
+        Ok(k) => Ok(k.generate_child_key(*index)?),
         Err(e) => Err(e),
     })
 }
