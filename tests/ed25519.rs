@@ -92,7 +92,7 @@ fn test_ed25519() {
         let seed = &Vec::from_hex(seed).unwrap();
         for (chain, chain_code, private, public) in tests {
             let chain = BIP32Path::from_str(chain).unwrap();
-            let key = derive_key_from_path(&seed, Curve::Ed25519, chain).unwrap();
+            let key = derive_key_from_path(&seed, Curve::Ed25519, &chain).unwrap();
             assert_eq!(&key.chain_code[..], &Vec::from_hex(chain_code).unwrap()[..]);
             assert_eq!(&key.key[..], &Vec::from_hex(private).unwrap()[..]);
             assert_eq!(&key.public_key()[..], &Vec::from_hex(public).unwrap()[..]);

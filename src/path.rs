@@ -3,7 +3,7 @@ use crate::{Error, HARDEND};
 use std::convert::From;
 
 /// A path structure defined by BIP 32.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct BIP32Path(pub(crate) Vec<u32>);
 
 impl BIP32Path {
