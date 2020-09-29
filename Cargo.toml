@@ -1,6 +1,6 @@
 [package]
 name = "slip10"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Ngo Iok Ui <wusyong9104@gmail.com>"]
 edition = "2018"
 description = "SLIP-0010 : Universal private key derivation from master private key"
@@ -10,9 +10,9 @@ readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ed25519-dalek = "1.0.0-pre.4"
-hmac = "0.9"
-sha2 = "0.9"
+ed25519-dalek = { version = "1.0", default-features = false, features = ["u64_backend"] }
+hmac = { version = "0.9", default-features = false }
+sha2 = { version = "0.9", default-features = false }
 
 [dev-dependencies]
 hex = "0.4"

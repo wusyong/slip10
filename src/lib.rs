@@ -1,9 +1,14 @@
+#![no_std]
+
+extern crate alloc;
+
 pub mod path;
 
 pub use crate::path::BIP32Path;
 
-use std::convert::TryInto;
-use std::fmt;
+use alloc::vec::Vec;
+use core::convert::TryInto;
+use core::fmt;
 
 use ed25519_dalek::{PublicKey, SecretKey};
 use hmac::{crypto_mac::Output, Hmac, Mac, NewMac};
@@ -24,7 +29,7 @@ impl fmt::Display for Error {
     }
 }
 
-impl std::error::Error for Error {}
+//impl core::error::Error for Error {}
 
 // Create alias for HMAC-SHA256
 type HmacSha256 = Hmac<Sha512>;
@@ -61,7 +66,8 @@ impl Curve {
         match self {
             Curve::Ed25519 => {
                 let public: PublicKey = (&SecretKey::from_bytes(key).unwrap()).into();
-                let mut result = vec![0u8];
+                let mut result = Vec::new();
+                result.push(0);
                 public.to_bytes().iter().for_each(|i| result.push(*i));
                 result
             }

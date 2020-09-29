@@ -1,6 +1,7 @@
 use crate::{Error, HARDEND};
 
-use std::convert::From;
+use alloc::vec::Vec;
+use core::convert::From;
 
 /// A path structure defined by BIP 32.
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
