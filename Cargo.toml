@@ -6,6 +6,7 @@ edition = "2018"
 description = "SLIP-0010 : Universal private key derivation from master private key"
 homepage = "https://github.com/wusyong/slip10"
 repository = "https://github.com/wusyong/slip10"
+documentation = "https://docs.rs/slip10"
 license = "Apache-2.0 OR MIT"
 readme = "README.md"
 
