@@ -7,16 +7,17 @@ use core::convert::From;
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct BIP32Path(pub(crate) Vec<u32>);
 
-impl BIP32Path {
+impl core::str::FromStr for BIP32Path {
+    type Err = Error;
+
     /// Create a BIP32Path form string literals.
-    pub fn from_str(path: &str) -> Result<BIP32Path, Error> {
+    fn from_str(path: &str) -> Result<Self, Self::Err> {
         let mut paths = Vec::new();
         let path = path.replace("/", "\n");
-        let mut lines = path.lines();
 
-        while let Some(p) = lines.next() {
+        for p in path.lines() {
             if p != "m" {
-                if p.ends_with("H") || p.ends_with("'") {
+                if p.ends_with('H') || p.ends_with('\'') {
                     let index: u32 = p[..p.len() - 1].parse().map_err(|_| Error::InvalidIndex)?;
                     if index < HARDEND {
                         paths.push(index + HARDEND);
@@ -36,7 +37,9 @@ impl BIP32Path {
 
         Ok(BIP32Path(paths))
     }
+}
 
+impl BIP32Path {
     /// Return the depth of the BIP32Path. For example, "m/0'/0'" will have depth of 2.
     pub fn depth(&self) -> u8 {
         self.0.len() as u8
