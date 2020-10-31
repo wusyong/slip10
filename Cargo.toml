@@ -4,7 +4,10 @@ version = "0.4.2"
 authors = ["Ngo Iok Ui <wusyong9104@gmail.com>"]
 edition = "2018"
 description = "SLIP-0010 : Universal private key derivation from master private key"
-license = "Apache-2.0/MIT"
+homepage = "https://github.com/wusyong/slip10"
+repository = "https://github.com/wusyong/slip10"
+documentation = "https://docs.rs/slip10"
+license = "Apache-2.0 OR MIT"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
