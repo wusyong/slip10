@@ -1,3 +1,5 @@
+use core::str::FromStr;
+
 use hex::FromHex;
 use slip10::*;
 
