@@ -1,3 +1,5 @@
+use core::str::FromStr;
+
 use slip10::BIP32Path;
 
 const HARDEND: u32 = 1 << 31;
@@ -73,8 +75,21 @@ fn test_parse_path() {
         ),
     ];
 
-    for (str, path) in smaples {
-        assert_eq!(BIP32Path::from_str(str).unwrap(), path);
+    for (bip32_path_str, expected_bip32_path) in smaples {
+        let parsed_bip32_path = BIP32Path::from_str(bip32_path_str).unwrap();
+        assert_eq!(parsed_bip32_path, expected_bip32_path);
+
+        let bip32_path_normalized_str = bip32_path_str.replace('H', "'");
+        let bip32_path_normalized_str = if !bip32_path_normalized_str.starts_with("m/") {
+            if bip32_path_str == "m" {
+                format!("m/")
+            } else {
+                format!("m/{}", bip32_path_normalized_str)
+            }
+        } else {
+            bip32_path_normalized_str
+        };
+        assert_eq!(parsed_bip32_path.to_string(), bip32_path_normalized_str);
     }
 
     let errors = vec![

@@ -1,5 +1,7 @@
 use crate::{Error, HARDEND};
 
+use alloc::format;
+use alloc::string::String;
 use alloc::vec::Vec;
 use core::convert::From;
 
@@ -36,6 +38,26 @@ impl core::str::FromStr for BIP32Path {
         }
 
         Ok(BIP32Path(paths))
+    }
+}
+
+impl core::fmt::Display for BIP32Path {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "m/{}",
+            self.0
+                .iter()
+                .map(|index| {
+                    if let Some(index) = index.checked_sub(HARDEND) {
+                        format!("{}'", index)
+                    } else {
+                        format!("{}", index)
+                    }
+                })
+                .collect::<Vec<String>>()
+                .join("/")
+        )
     }
 }
 
